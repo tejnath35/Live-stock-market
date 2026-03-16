@@ -30,14 +30,16 @@ function Dashboard() {
   }, []);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Stock Market Dashboard</h1>
+   <div className="min-h-screen w-full bg-linear-to-br from-blue-900 via-sky-800 to-indigo-900 p-20 text-white">
+      <h1 className="text-4xl font-bold mb-10">Stock Market Dashboard</h1>
 
-      <div style={{ display: "flex", gap: "20px" }}>
-        <DashboardCard
+      <div className="flex gap-3 mb-10 mt-5">
+        <div>
+        <DashboardCard 
           title="Portfolio Value"
           value={`₹${data.portfolioValue}`}
         />
+        </div>
 
         <DashboardCard
           title="Wallet Balance"
