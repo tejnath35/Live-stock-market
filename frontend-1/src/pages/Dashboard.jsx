@@ -6,6 +6,9 @@ import StockChart from "../components/StockChart";
 
 function Dashboard() {
 
+  // get logged-in user
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const [data] = useState({
 
     portfolioValue: 25000,
@@ -38,10 +41,31 @@ function Dashboard() {
 
     <div className="p-10">
 
-      <h1 className="text-4xl font-bold mb-10">
+      {/* DASHBOARD TITLE */}
+      <h1 className="text-4xl font-bold mb-4">
         Dashboard
       </h1>
 
+      {/* USER INFO */}
+      <div className="bg-white p-5 rounded-xl shadow mb-10 flex justify-between items-center">
+
+        <div>
+          <p className="text-xl font-semibold">
+            Welcome, {user?.name}
+          </p>
+          <p className="text-gray-500">
+            {user?.email}
+          </p>
+        </div>
+
+        <div className="text-right">
+          <p className="text-gray-500 text-sm">Account Status</p>
+          <p className="text-green-500 font-semibold">Active</p>
+        </div>
+
+      </div>
+
+      {/* DASHBOARD CARDS */}
       <div className="flex gap-6 mb-10">
 
         <DashboardCard
@@ -61,12 +85,14 @@ function Dashboard() {
 
       </div>
 
+      {/* PORTFOLIO CHART */}
       <h2 className="text-2xl font-semibold mb-4">
         Portfolio Growth
       </h2>
 
       <PortfolioChart data={data.portfolioGrowth}/>
 
+      {/* STOCK CHART */}
       <h2 className="text-2xl font-semibold mt-10 mb-4">
         Stock Price
       </h2>

@@ -1,7 +1,22 @@
 import Navbar from "../components/Navbar";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 
 function Home() {
+
+  const navigate = useNavigate();
+
+  const handleStartTrading = () => {
+
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      navigate("/market");
+    } else {
+      navigate("/login");
+    }
+
+  };
+
   return (
     <div className="bg-[#0f172a] text-white min-h-screen">
 
@@ -23,16 +38,16 @@ function Home() {
             without financial risk.
           </p>
 
-          <Link
-            to="/signup"
-            className="bg-purple-500 px-8 py-4 rounded-xl text-lg hover:bg-purple-600 transition shadow-xl inline-block"
+          <button
+            onClick={handleStartTrading}
+            className="bg-purple-500 px-8 py-4 rounded-xl text-lg hover:bg-purple-600 transition shadow-xl"
           >
             Start Trading
-          </Link>
+          </button>
 
         </div>
 
-        <div className="float w-[420px] h-[260px] bg-gradient-to-r from-purple-500 to-indigo-500 rounded-2xl shadow-2xl flex items-center justify-center text-xl font-semibold">
+        <div className="float w-[420px] h-[260px] bg-linear-to-r from-purple-500 to-indigo-500 rounded-2xl shadow-2xl flex items-center justify-center text-xl font-semibold">
           Live Market Preview
         </div>
 
