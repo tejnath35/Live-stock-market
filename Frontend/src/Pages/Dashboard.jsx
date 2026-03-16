@@ -1,23 +1,60 @@
+import { useEffect, useState } from "react";
 import DashboardCard from "../components/DashboardCard";
 import PortfolioChart from "../components/PortfolioChart";
 import StockChart from "../components/StockChart";
+import { getDashboardData } from "../Services/Api";
 
 function Dashboard() {
+
+  const [data, setData] = useState({
+    portfolioValue: 0,
+    walletBalance: 0,
+    profitLoss: 0,
+    portfolioGrowth: [],
+    stockPrice: []
+  });
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+        const res = await getDashboardData();
+        setData(res.data);
+      } catch (err) {
+        console.log("Backend not available");
+      }
+    };
+
+    fetchData();
+
+  }, []);
+
   return (
     <div style={{ padding: "20px" }}>
-      <h1 className="text-3xl mb-10">📊 Stock Market Dashboard</h1>
+      <h1>Stock Market Dashboard</h1>
 
       <div style={{ display: "flex", gap: "20px" }}>
-        <DashboardCard title="Portfolio Value" value="₹25,000" />
-        <DashboardCard title="Wallet Balance" value="₹10,000" />
-        <DashboardCard title="Profit / Loss" value="+₹3,200" />
+        <DashboardCard
+          title="Portfolio Value"
+          value={`₹${data.portfolioValue}`}
+        />
+
+        <DashboardCard
+          title="Wallet Balance"
+          value={`₹${data.walletBalance}`}
+        />
+
+        <DashboardCard
+          title="Profit / Loss"
+          value={`₹${data.profitLoss}`}
+        />
       </div>
 
-      <h2 style={{ marginTop: "40px" }}>Portfolio Growth</h2>
-      <PortfolioChart />
+      <h2>Portfolio Growth</h2>
+      <PortfolioChart data={data.portfolioGrowth} />
 
-      <h2 style={{ marginTop: "40px" }}>Stock Price</h2>
-      <StockChart />
+      <h2>Stock Price</h2>
+      <StockChart data={data.stockPrice} />
     </div>
   );
 }
