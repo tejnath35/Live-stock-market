@@ -1,0 +1,146 @@
+# ==================================
+
+# Stock Market Simulator API Tests
+
+# ==================================
+
+# --------------------------------
+
+# 1️⃣ Register User - Sravya
+
+# --------------------------------
+###
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+"name": "Sravya",
+"email": "sravya@gmail.com",
+"password": "123456"
+}
+###
+
+# --------------------------------
+
+# 2️⃣ Register User - Kavya
+
+# --------------------------------
+
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+"name": "Kavya",
+"email": "kavya@gmail.com",
+"password": "123456"
+}
+###
+
+# --------------------------------
+
+# 3️⃣ Login User - Sravya
+
+# --------------------------------
+
+# Copy the token from response
+
+### Login Sravya
+
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+"email": "sravya@gmail.com",
+"password": "123456"
+}
+###
+
+# --------------------------------
+
+# 4️⃣ Login User - Kavya
+
+# --------------------------------
+
+### Login Kavya
+
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+"email": "kavya@gmail.com",
+"password": "123456"
+}
+###
+
+# --------------------------------
+
+# 5️⃣ Buy Stock
+
+# --------------------------------
+
+# Replace YOUR_TOKEN_HERE with token
+
+### Buy Stock
+
+POST http://localhost:3000/api/stocks/buy
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Yjc5MjhiOTA1NDNjMjk2MjU0YmE4ZCIsImlhdCI6MTc3MzY0MDE5MCwiZXhwIjoxNzczNzI2NTkwfQ.fxMOiqvFXIa7HE4A3NALQi2g1fMojmuM724zcHXrLoM
+
+{
+"stockSymbol": "AAPL",
+"quantity": 5,
+"price": 150
+}
+###
+
+# --------------------------------
+
+# 6️⃣ Sell Stock
+
+# --------------------------------
+
+### Sell Stock
+
+POST http://localhost:3000/api/stocks/sell
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Yjc5MjhiOTA1NDNjMjk2MjU0YmE4ZCIsImlhdCI6MTc3MzY0MDE5MCwiZXhwIjoxNzczNzI2NTkwfQ.fxMOiqvFXIa7HE4A3NALQi2g1fMojmuM724zcHXrLoM
+
+{
+"stockSymbol": "AAPL",
+"quantity": 2,
+"price": 170
+}
+###
+
+# --------------------------------
+
+# 7️⃣ Get Portfolio
+
+# --------------------------------
+
+### Get Portfolio
+
+GET http://localhost:3000/api/stocks/portfolio
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Yjc5MjhiOTA1NDNjMjk2MjU0YmE4ZCIsImlhdCI6MTc3MzY0MDE5MCwiZXhwIjoxNzczNzI2NTkwfQ.fxMOiqvFXIa7HE4A3NALQi2g1fMojmuM724zcHXrLoM
+###
+
+# --------------------------------
+
+# 8️⃣ Get Transactions
+
+# --------------------------------
+
+### Get Transactions
+
+GET http://localhost:3000/api/stocks/transactions
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Yjc5MjhiOTA1NDNjMjk2MjU0YmE4ZCIsImlhdCI6MTc3MzY0MDE5MCwiZXhwIjoxNzczNzI2NTkwfQ.fxMOiqvFXIa7HE4A3NALQi2g1fMojmuM724zcHXrLoM
+###
+# --------------------------------
+
+# 9️⃣ Leaderboard
+
+# --------------------------------
+
+### Leaderboard
+
+GET http://localhost:3000/api/stocks/leaderboard
