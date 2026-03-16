@@ -4,19 +4,60 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid
+  CartesianGrid,
+  ResponsiveContainer
 } from "recharts";
 
 function StockChart({ data }) {
 
   return (
-    <LineChart width={600} height={300} data={data}>
-      <XAxis dataKey="time" />
-      <YAxis />
-      <Tooltip />
-      <CartesianGrid stroke="#ccc" />
-      <Line type="monotone" dataKey="price" stroke="#82ca9d" />
-    </LineChart>
+    <div
+      style={{
+        background: "#1e293b",
+        padding: "20px",
+        borderRadius: "12px",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+        marginTop: "20px"
+      }}
+    >
+
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+
+          <CartesianGrid stroke="#334155" strokeDasharray="3 3" />
+
+          <XAxis
+            dataKey="time"
+            stroke="#94a3b8"
+            tick={{ fill: "#cbd5f5" }}
+          />
+
+          <YAxis
+            stroke="#94a3b8"
+            tick={{ fill: "#cbd5f5" }}
+          />
+
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "#0f172a",
+              border: "none",
+              borderRadius: "8px",
+              color: "white"
+            }}
+          />
+
+          <Line
+            type="monotone"
+            dataKey="price"
+            stroke="#22c55e"
+            strokeWidth={3}
+            dot={{ r: 4 }}
+            activeDot={{ r: 6 }}
+          />
+
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 
 }

@@ -53,7 +53,9 @@ function Dashboard() {
       </div>
 
       <h2>Portfolio Growth</h2>
+      <div className="mb-5">
       <PortfolioChart data={data.portfolioGrowth} />
+      </div>
 
       <h2>Stock Price</h2>
       <StockChart data={data.stockPrice} />
