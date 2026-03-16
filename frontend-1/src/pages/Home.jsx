@@ -47,7 +47,7 @@ function Home() {
 
         </div>
 
-        <div className="float w-[420px] h-[260px] bg-linear-to-r from-purple-500 to-indigo-500 rounded-2xl shadow-2xl flex items-center justify-center text-xl font-semibold">
+        <div className="float w-105 h-65 bg-linear-to-r from-purple-500 to-indigo-500 rounded-2xl shadow-2xl flex items-center justify-center text-xl font-semibold">
           Live Market Preview
         </div>
 
