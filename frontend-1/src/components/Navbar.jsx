@@ -1,0 +1,72 @@
+import { NavLink } from "react-router";
+
+function Navbar() {
+  return (
+    <nav className="bg-[#020617] text-white px-10  py-6 flex justify-between items-center shadow-lg">
+
+      <h1 className="text-2xl font-bold text-purple-400">
+        TradeSim
+      </h1>
+
+      <div className="space-x-6">
+
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `px-3 font-bold py-1 rounded-lg hover:text-purple-400 ${
+              isActive ? "bg-purple-600 shadow-lg" : ""
+            }`
+          }
+        >
+          Home
+        </NavLink>
+
+        <NavLink
+          to="/market"
+          className={({ isActive }) =>
+            ` font-bold px-3 py-1 rounded-lg hover:text-purple-400 ${
+              isActive ? "bg-purple-600 shadow-lg" : ""
+            }`
+          }
+        >
+          Market
+        </NavLink>
+
+        <NavLink
+          to="/dashboard"
+          className={({ isActive }) =>
+            ` font-bold px-3 py-1 rounded-lg hover:text-purple-400 ${
+              isActive ? "bg-purple-600 shadow-lg" : ""
+            }`
+          }
+        >
+          Dashboard
+        </NavLink>
+
+        <NavLink
+          to="/portfolio"
+          className={({ isActive }) =>
+            ` font-bold px-3 py-1 rounded-lg hover:text-purple-400 ${
+              isActive ? "bg-purple-600 shadow-lg" : ""
+            }`
+          }
+        >
+          Portfolio
+        </NavLink>
+
+        <NavLink
+          to="/login"
+         className={({ isActive }) =>
+            ` font-bold px-3 py-1 rounded-lg hover:text-purple-400 ${
+              isActive ? "bg-purple-600 shadow-lg" : ""
+            }`}
+        >
+          Login/Register
+        </NavLink>  
+
+      </div>
+    </nav>
+  );
+}
+
+export default Navbar;
