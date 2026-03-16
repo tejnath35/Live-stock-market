@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router"
 function Login() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-900 via-black to-gray-900">
+    <div className="flex items-center justify-center min-h-screen bg-linear-to-r from-gray-900 via-black to-gray-900">
 
       <div className="bg-white rounded-2xl shadow-2xl p-10 h-80 w-96 transform hover:scale-105 transition">
 
