@@ -2,12 +2,12 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
+dotenv.config();
+
 const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
 const stockRoutes = require("./routes/stockRoutes");
-
-dotenv.config();
 
 const app = express();
 
@@ -25,7 +25,6 @@ connectDB();
 app.get("/", (req, res) => {
   res.send("Stock Market Simulator Backend Running");
 });
-
 
 // Routes
 app.use("/api/auth", authRoutes);

@@ -1,110 +1,151 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import DashboardCard from "../components/DashboardCard";
 import PortfolioChart from "../components/PortfolioChart";
 import StockChart from "../components/StockChart";
+import { getPortfolioData, getStockHistory } from "../services/Api";
 
 function Dashboard() {
 
   // get logged-in user
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const [data] = useState({
+  const [portfolio, setPortfolio] = useState([]);
+  const [selectedSymbol, setSelectedSymbol] = useState("");
+  const [stockHistory, setStockHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [historyError, setHistoryError] = useState(null);
+  const [walletBalance, setWalletBalance] = useState(12000);
 
-    portfolioValue: 25000,
+  const [data, setData] = useState({
+    portfolioValue: 0,
     walletBalance: 12000,
-    profitLoss: 3200,
-
-    portfolioGrowth: [
-      { day: "Mon", value: 12000 },
-      { day: "Tue", value: 15000 },
-      { day: "Wed", value: 17000 },
-      { day: "Thu", value: 21000 },
-      { day: "Fri", value: 25000 }
-    ],
-
-    stockPrice: [
-      { time: "10:00", price: 150 },
-      { time: "11:00", price: 165 },
-      { time: "12:00", price: 172 },
-      { time: "13:00", price: 180 },
-      { time: "14:00", price: 195 }
-    ]
-
+    profitLoss: 0,
+    portfolioGrowth: [],
+    selectedStockPriceData: []
   });
 
-  return(
+  const fetchPortfolio = async () => {
+    try {
+      setError(null);
+      setLoading(true);
+      const resp = await getPortfolioData();
+      const portfolioData = resp.data.portfolio ?? [];
+      setPortfolio(portfolioData);
 
-  <div className="bg-gray-100 min-h-screen">
+      setWalletBalance(resp.data.walletBalance ?? 0);
 
-    <Navbar/>
+      const portfolioValue = portfolioData.reduce((sum, stock) => sum + (stock.currentValue ?? 0), 0);
+      const profitLoss = portfolioData.reduce((sum, stock) => sum + (stock.profitLoss ?? 0), 0);
 
-    <div className="p-10">
+      const growth = portfolioData.map((item, idx) => ({
+        day: `D${idx + 1}`,
+        value: item.currentValue ?? 0
+      }));
 
-      {/* DASHBOARD TITLE */}
-      <h1 className="text-4xl font-bold mb-4">
-        Dashboard
-      </h1>
+      setData((prev) => ({
+        ...prev,
+        portfolioValue,
+        walletBalance: resp.data.walletBalance ?? prev.walletBalance,
+        profitLoss,
+        portfolioGrowth: growth
+      }));
 
-      {/* USER INFO */}
-      <div className="bg-white p-5 rounded-xl shadow mb-10 flex justify-between items-center">
+      if (!selectedSymbol && portfolioData.length > 0) {
+        setSelectedSymbol(portfolioData[0].stockSymbol);
+      }
 
-        <div>
-          <p className="text-xl font-semibold">
-            Welcome, {user?.name}
-          </p>
-          <p className="text-gray-500">
-            {user?.email}
-          </p>
+      setLoading(false);
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
+      setLoading(false);
+    }
+  };
+
+  const fetchStockHistory = async (symbol) => {
+    if (!symbol) {
+      setStockHistory([]);
+      setHistoryError(null);
+      return;
+    }
+
+    try {
+      setHistoryError(null);
+      const to = Math.floor(Date.now() / 1000);
+      const from = to - 30 * 24 * 60 * 60;
+      const resp = await getStockHistory(symbol, "D", from, to);
+      setStockHistory(resp.data.map((item) => ({ time: item.time, price: item.close })));
+    } catch (err) {
+      setHistoryError(err?.response?.data?.message || err.message || "Failed to load stock history");
+      setStockHistory([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchPortfolio();
+  }, []);
+
+  useEffect(() => {
+    if (selectedSymbol) {
+      fetchStockHistory(selectedSymbol);
+    }
+  }, [selectedSymbol]);
+
+  return (
+    <div className="bg-gray-100 min-h-screen">
+      <Navbar />
+
+      <div className="p-10">
+        <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
+
+        <div className="bg-white p-5 rounded-xl shadow mb-10 flex justify-between items-center">
+          <div>
+            <p className="text-xl font-semibold">Welcome, {user?.name}</p>
+            <p className="text-gray-500">{user?.email}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-gray-500 text-sm">Account Status</p>
+            <p className="text-green-500 font-semibold">Active</p>
+          </div>
         </div>
 
-        <div className="text-right">
-          <p className="text-gray-500 text-sm">Account Status</p>
-          <p className="text-green-500 font-semibold">Active</p>
-        </div>
+        {loading && <p className="text-blue-600 mb-4">Loading dashboard data...</p>}
+        {error && <p className="text-red-600 mb-4">{error}</p>}
 
+        {!loading && !error && (
+          <>
+            <div className="flex gap-6 mb-10">
+              <DashboardCard title="Portfolio Value" value={`₹${data.portfolioValue.toFixed(2)}`} />
+              <DashboardCard title="Wallet Balance" value={`₹${walletBalance.toFixed(2)}`} />
+              <DashboardCard title="Profit / Loss" value={`₹${data.profitLoss.toFixed(2)}`} />
+            </div>
+
+            <div className="mb-10">
+              <label className="block mb-2 font-medium">Select stock for history chart:</label>
+              <select
+                className="border rounded px-3 py-2" 
+                value={selectedSymbol}
+                onChange={(e) => setSelectedSymbol(e.target.value)}
+                disabled={portfolio.length === 0}
+              >
+                {portfolio.map((stock) => (
+                  <option key={stock.stockSymbol} value={stock.stockSymbol}>{stock.stockSymbol}</option>
+                ))}
+              </select>
+            </div>
+
+            <h2 className="text-2xl font-semibold mb-4">Portfolio Growth</h2>
+            <PortfolioChart data={data.portfolioGrowth} />
+
+            <h2 className="text-2xl font-semibold mt-10 mb-4">Selected Stock Price History ({selectedSymbol})</h2>
+            {historyError && <p className="text-yellow-600 mb-2">{historyError}</p>}
+            <StockChart data={stockHistory} />
+          </>
+        )}
       </div>
-
-      {/* DASHBOARD CARDS */}
-      <div className="flex gap-6 mb-10">
-
-        <DashboardCard
-          title="Portfolio Value"
-          value={`₹${data.portfolioValue}`}
-        />
-
-        <DashboardCard
-          title="Wallet Balance"
-          value={`₹${data.walletBalance}`}
-        />
-
-        <DashboardCard
-          title="Profit / Loss"
-          value={`₹${data.profitLoss}`}
-        />
-
-      </div>
-
-      {/* PORTFOLIO CHART */}
-      <h2 className="text-2xl font-semibold mb-4">
-        Portfolio Growth
-      </h2>
-
-      <PortfolioChart data={data.portfolioGrowth}/>
-
-      {/* STOCK CHART */}
-      <h2 className="text-2xl font-semibold mt-10 mb-4">
-        Stock Price
-      </h2>
-
-      <StockChart data={data.stockPrice}/>
-
     </div>
-
-  </div>
-
-  )
-
+  );
 }
 
-export default Dashboard
+export default Dashboard;

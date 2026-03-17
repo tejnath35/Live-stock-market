@@ -32,6 +32,16 @@ function Navbar() {
         >
           Home
         </NavLink>
+        <NavLink
+              to="/market"
+              className={({ isActive }) =>
+                `font-bold px-3 py-1 rounded-lg hover:text-purple-400 ${
+                  isActive ? "bg-purple-600 shadow-lg" : ""
+                }`
+              }
+            >
+              Market
+            </NavLink>
 
         {token && (
           <>
@@ -69,16 +79,6 @@ function Navbar() {
 
         {!token && (
           <>
-           <NavLink
-              to="/market"
-              className={({ isActive }) =>
-                `font-bold px-3 py-1 rounded-lg hover:text-purple-400 ${
-                  isActive ? "bg-purple-600 shadow-lg" : ""
-                }`
-              }
-            >
-              Market
-            </NavLink>
           <NavLink
             to="/login"
             className={({ isActive }) =>
