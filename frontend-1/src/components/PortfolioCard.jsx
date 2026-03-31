@@ -4,13 +4,21 @@ import API from "../services/Api";
 function PortfolioCard({ stock }) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const profitLoss = stock?.profitLoss?.toFixed(2) ?? 0;
   const changeClass = profitLoss >= 0 ? "text-green-600" : "text-red-600";
 
   const onSell = async () => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      window.location.href = "/login";
+      return;
+    }
+
     try {
       setError(null);
+      setSuccessMessage(null);
       setPending(true);
       await API.post("/stocks/sell", {
         stockSymbol: stock.stockSymbol,
@@ -18,6 +26,7 @@ function PortfolioCard({ stock }) {
       });
       window.dispatchEvent(new Event("portfolio-updated"));
       setPending(false);
+      setSuccessMessage(`Sold 1 share of ${stock.stockSymbol}`);
     } catch (err) {
       setPending(false);
       setError(err?.response?.data?.message || err.message);
@@ -41,6 +50,7 @@ function PortfolioCard({ stock }) {
         {pending ? "Selling..." : "Sell 1"}
       </button>
 
+      {successMessage && <p className="text-green-600 mt-2">{successMessage}</p>}
       {error && <p className="text-red-600 mt-2">{error}</p>}
     </div>
   );

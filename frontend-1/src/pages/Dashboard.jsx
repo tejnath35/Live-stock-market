@@ -23,7 +23,9 @@ function Dashboard() {
     walletBalance: 12000,
     profitLoss: 0,
     portfolioGrowth: [],
-    selectedStockPriceData: []
+    selectedStockPriceData: [],
+    profitLossHistory: [],
+    lastUpdated: null
   });
 
   const fetchPortfolio = async () => {
@@ -39,18 +41,26 @@ function Dashboard() {
       const portfolioValue = portfolioData.reduce((sum, stock) => sum + (stock.currentValue ?? 0), 0);
       const profitLoss = portfolioData.reduce((sum, stock) => sum + (stock.profitLoss ?? 0), 0);
 
-      const growth = portfolioData.map((item, idx) => ({
-        day: `D${idx + 1}`,
-        value: item.currentValue ?? 0
-      }));
+      setData((prev) => {
+        const existingGrowth = prev.portfolioGrowth || [];
+        const existingProfit = prev.profitLossHistory || [];
 
-      setData((prev) => ({
-        ...prev,
-        portfolioValue,
-        walletBalance: resp.data.walletBalance ?? prev.walletBalance,
-        profitLoss,
-        portfolioGrowth: growth
-      }));
+        const nextPoint = {
+          time: new Date().toLocaleTimeString(),
+          value: portfolioValue,
+          profitLoss: profitLoss
+        };
+
+        return {
+          ...prev,
+          portfolioValue,
+          walletBalance: resp.data.walletBalance ?? prev.walletBalance,
+          profitLoss,
+          lastUpdated: new Date().toLocaleTimeString(),
+          portfolioGrowth: [...existingGrowth, nextPoint].slice(-20),
+          profitLossHistory: [...existingProfit, nextPoint].slice(-20)
+        };
+      });
 
       if (!selectedSymbol && portfolioData.length > 0) {
         setSelectedSymbol(portfolioData[0].stockSymbol);
@@ -73,7 +83,7 @@ function Dashboard() {
     try {
       setHistoryError(null);
       const to = Math.floor(Date.now() / 1000);
-      const from = to - 30 * 24 * 60 * 60;
+      const from = to - 365 * 24 * 60 * 60; // Past year instead of 30 days
       const resp = await getStockHistory(symbol, "D", from, to);
       setStockHistory(resp.data.map((item) => ({ time: item.time, price: item.close })));
     } catch (err) {
@@ -84,12 +94,21 @@ function Dashboard() {
 
   useEffect(() => {
     fetchPortfolio();
+    const intervalId = setInterval(fetchPortfolio, 30000); // refresh every 30 seconds
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
     if (selectedSymbol) {
       fetchStockHistory(selectedSymbol);
     }
+    const historyInterval = setInterval(() => {
+      if (selectedSymbol) {
+        fetchStockHistory(selectedSymbol);
+      }
+    }, 30000); // refresh stock history every 30 seconds
+
+    return () => clearInterval(historyInterval);
   }, [selectedSymbol]);
 
   return (
@@ -135,8 +154,12 @@ function Dashboard() {
               </select>
             </div>
 
-            <h2 className="text-2xl font-semibold mb-4">Portfolio Growth</h2>
-            <PortfolioChart data={data.portfolioGrowth} />
+            <h2 className="text-2xl font-semibold mb-4">Portfolio Growth / P&L</h2>
+            <PortfolioChart data={data.portfolioGrowth.map((point) => ({
+              ...point,
+              profit: point.profitLoss > 0 ? point.profitLoss : 0,
+              loss: point.profitLoss < 0 ? Math.abs(point.profitLoss) : 0
+            }))} />
 
             <h2 className="text-2xl font-semibold mt-10 mb-4">Selected Stock Price History ({selectedSymbol})</h2>
             {historyError && <p className="text-yellow-600 mb-2">{historyError}</p>}

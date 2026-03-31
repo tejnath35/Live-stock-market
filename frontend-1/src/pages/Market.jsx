@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import StockCard from "../components/Stockcard";
-import { getMarketStocks } from "../services/Api";
+import { getMarketStocks, getWallet } from "../services/Api";
 
 function Market() {
   const [market, setMarket] = useState([]);
+  const [walletBalance, setWalletBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -12,8 +13,9 @@ function Market() {
     try {
       setError(null);
       setLoading(true);
-      const response = await getMarketStocks();
-      setMarket(response.data);
+      const [marketResp, walletResp] = await Promise.all([getMarketStocks(), getWallet()]);
+      setMarket(marketResp.data);
+      setWalletBalance(walletResp.data.walletBalance ?? 0);
     } catch (err) {
       setError(err?.response?.data?.message || err.message);
     } finally {
@@ -23,7 +25,7 @@ function Market() {
 
   useEffect(() => {
     fetchMarket();
-    const intervalId = setInterval(fetchMarket, 15000);
+    const intervalId = setInterval(fetchMarket, 15000); // 15 seconds for faster update but configured with backend cache
     return () => clearInterval(intervalId);
   }, []);
 
@@ -33,6 +35,7 @@ function Market() {
 
       <div className="p-10">
         <h1 className="text-3xl font-bold mb-6">Live Market Data</h1>
+        <p className="text-gray-700 font-semibold mb-4">Wallet Balance: ₹{walletBalance.toFixed(2)}</p>
         {loading && <p>Loading market data...</p>}
         {error && <p className="text-red-600">{error}</p>}
 

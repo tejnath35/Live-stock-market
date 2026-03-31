@@ -5,18 +5,26 @@ function Stockcard({ stock }) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState(null);
 
+  const [successMessage, setSuccessMessage] = useState(null);
+
   const onBuy = async () => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      window.location.href = "/login";
+      return;
+    }
+
     try {
       setError(null);
+      setSuccessMessage(null);
       setPending(true);
-      // default buy 1 share; modify as needed
       await API.post("/stocks/buy", {
         stockSymbol: stock.stockSymbol,
         quantity: 1
       });
       setPending(false);
       window.dispatchEvent(new Event("portfolio-updated"));
-      alert(`Bought 1 share of ${stock.stockSymbol} at ${stock.currentPrice}`);
+      setSuccessMessage(`Bought 1 share of ${stock.stockSymbol} at ₹${stock.currentPrice?.toFixed(2)}`);
     } catch (err) {
       setPending(false);
       setError(err?.response?.data?.message || err.message);
@@ -36,6 +44,9 @@ function Stockcard({ stock }) {
           <p className="text-gray-700 mt-2">
             Price: ${stock.currentPrice?.toFixed(2) ?? "-"}
           </p>
+          <p className="text-gray-500 text-sm">
+            Last updated: {stock.lastUpdated ? new Date(stock.lastUpdated).toLocaleTimeString() : "-"}
+          </p>
 
           <p className={`mt-1 ${changeClass}`}>
             {stock.change?.toFixed(2) ?? "0.00"} ({stock.percentChange?.toFixed(2) ?? "0.00"}%)
@@ -51,6 +62,7 @@ function Stockcard({ stock }) {
         {stock.error ? "Disabled" : pending ? "Buying..." : "Buy 1"}
       </button>
 
+      {successMessage && <p className="text-sm text-green-600 mt-2">{successMessage}</p>}
       {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
     </div>
   );

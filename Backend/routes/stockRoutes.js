@@ -5,6 +5,8 @@ const {
   buyStock,
   sellStock,
   getPortfolio,
+  getWallet,
+  updateWallet,
   getTransactions,
   getLeaderboard,
   getQuote,
@@ -15,6 +17,8 @@ const {
 router.post("/buy", buyStock);
 router.post("/sell", sellStock);
 router.get("/portfolio", getPortfolio);
+router.get("/wallet", getWallet);
+router.post("/wallet", updateWallet);
 router.get("/transactions", getTransactions);
 router.get("/leaderboard", getLeaderboard);
 router.get("/quote", getQuote);
