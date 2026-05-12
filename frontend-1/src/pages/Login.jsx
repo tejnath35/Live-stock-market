@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:3000/api" : "https://live-stock-market-2mfb.onrender.com/api");
+
 function Login() {
 
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ function Login() {
     try {
 
       const res = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        `${API_URL}/auth/login`,
         {
           email,
           password
