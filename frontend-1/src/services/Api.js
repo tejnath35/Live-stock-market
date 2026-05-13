@@ -6,6 +6,14 @@ const API = axios.create({
   baseURL: API_URL
 });
 
+API.interceptors.request.use((req) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    req.headers.Authorization = token;
+  }
+  return req;
+});
+
 export const getDashboardData = () => API.get("/dashboard");
 export const getMarketStocks = () => API.get("/stocks/market");
 export const getStockQuote = (symbol) => API.get(`/stocks/quote?symbol=${symbol}`);

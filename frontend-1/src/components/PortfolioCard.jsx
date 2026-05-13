@@ -10,9 +10,9 @@ function PortfolioCard({ stock }) {
   const changeClass = profitLoss >= 0 ? "text-green-600" : "text-red-600";
 
   const onSell = async () => {
-    const user = localStorage.getItem("user");
-    if (!user) {
-      window.location.href = "/login";
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Please login to sell stocks");
       return;
     }
 

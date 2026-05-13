@@ -13,9 +13,15 @@ function Market() {
     try {
       setError(null);
       setLoading(true);
-      const [marketResp, walletResp] = await Promise.all([getMarketStocks(), getWallet()]);
-      setMarket(marketResp.data);
-      setWalletBalance(walletResp.data.walletBalance ?? 0);
+      const token = localStorage.getItem("token");
+      if (token) {
+        const [marketResp, walletResp] = await Promise.all([getMarketStocks(), getWallet()]);
+        setMarket(marketResp.data);
+        setWalletBalance(walletResp.data.walletBalance ?? 0);
+      } else {
+        const marketResp = await getMarketStocks();
+        setMarket(marketResp.data);
+      }
     } catch (err) {
       setError(err?.response?.data?.message || err.message);
     } finally {
@@ -35,7 +41,7 @@ function Market() {
 
       <div className="p-10">
         <h1 className="text-3xl font-bold mb-6">Live Market Data</h1>
-        <p className="text-gray-700 font-semibold mb-4">Wallet Balance: ₹{walletBalance.toFixed(2)}</p>
+        {localStorage.getItem("token") && <p className="text-gray-700 font-semibold mb-4">Wallet Balance: ₹{walletBalance.toFixed(2)}</p>}
         {loading && <p>Loading market data...</p>}
         {error && <p className="text-red-600">{error}</p>}
 

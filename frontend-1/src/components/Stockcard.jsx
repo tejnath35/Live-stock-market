@@ -8,9 +8,9 @@ function Stockcard({ stock }) {
   const [successMessage, setSuccessMessage] = useState(null);
 
   const onBuy = async () => {
-    const user = localStorage.getItem("user");
-    if (!user) {
-      window.location.href = "/login";
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Please login to buy stocks");
       return;
     }
 
