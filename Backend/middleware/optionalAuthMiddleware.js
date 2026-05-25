@@ -12,9 +12,6 @@ module.exports = function (req, res, next) {
     req.user = decoded;
     next();
   } catch {
-    // If token is invalid, we can either reject or ignore and let them act as unauthenticated.
-    // Given the previous fallback behavior, treating an invalid token as unauthenticated might be fine,
-    // but typically we should reject an invalid token to prevent confusion.
     return res.status(401).json({ message: "Invalid token" });
   }
 };
