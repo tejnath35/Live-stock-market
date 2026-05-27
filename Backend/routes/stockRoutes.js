@@ -14,9 +14,6 @@ const {
   getStockHistory
 } = require("../controllers/stockController");
 
-const optionalAuthMiddleware = require("../middleware/optionalAuthMiddleware");
-
-router.use(optionalAuthMiddleware);
 
 router.post("/buy", buyStock);
 router.post("/sell", sellStock);
