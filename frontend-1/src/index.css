@@ -1,5 +1,30 @@
 @import "tailwindcss";
 
+:root {
+  font-family: "Poppins", sans-serif;
+  color: #e2e8f0;
+  background: #020617;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
 @keyframes float {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
@@ -8,4 +33,10 @@
 
 .float {
   animation: float 4s ease-in-out infinite;
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
 }

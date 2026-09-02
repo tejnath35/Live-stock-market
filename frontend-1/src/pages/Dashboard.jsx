@@ -115,15 +115,15 @@ function Dashboard() {
     <div className="bg-gray-100 min-h-screen">
       <Navbar />
 
-      <div className="p-10">
-        <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
+      <div className="p-4 sm:p-10">
+        <h1 className="text-3xl font-bold mb-4 sm:text-4xl">Dashboard</h1>
 
-        <div className="bg-white p-5 rounded-xl shadow mb-10 flex justify-between items-center">
+        <div className="bg-white p-4 rounded-xl shadow mb-8 flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center sm:mb-10 sm:p-5">
           <div>
-            <p className="text-xl font-semibold">Welcome, {user?.name}</p>
-            <p className="text-gray-500">{user?.email}</p>
+            <p className="text-lg font-semibold sm:text-xl">Welcome, {user?.name}</p>
+            <p className="text-gray-500 break-all">{user?.email}</p>
           </div>
-          <div className="text-right">
+          <div className="text-left sm:text-right">
             <p className="text-gray-500 text-sm">Account Status</p>
             <p className="text-green-500 font-semibold">Active</p>
           </div>
@@ -134,16 +134,16 @@ function Dashboard() {
 
         {!loading && !error && (
           <>
-            <div className="flex gap-6 mb-10">
+            <div className="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-2 xl:grid-cols-3 sm:gap-6 sm:mb-10">
               <DashboardCard title="Portfolio Value" value={`₹${data.portfolioValue.toFixed(2)}`} />
               <DashboardCard title="Wallet Balance" value={`₹${walletBalance.toFixed(2)}`} />
               <DashboardCard title="Profit / Loss" value={`₹${data.profitLoss.toFixed(2)}`} />
             </div>
 
-            <div className="mb-10">
+            <div className="mb-8 sm:mb-10">
               <label className="block mb-2 font-medium">Select stock for history chart:</label>
               <select
-                className="border rounded px-3 py-2" 
+                className="w-full max-w-sm border rounded px-3 py-2"
                 value={selectedSymbol}
                 onChange={(e) => setSelectedSymbol(e.target.value)}
                 disabled={portfolio.length === 0}

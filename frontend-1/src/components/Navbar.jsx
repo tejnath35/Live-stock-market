@@ -15,84 +15,80 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-[#020617] text-white px-10 py-6 flex justify-between items-center shadow-lg">
+    <nav className="bg-[#020617] text-white px-4 py-4 shadow-lg sm:px-10 sm:py-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-xl font-bold text-purple-400 sm:text-2xl">
+          TradeSim
+        </h1>
 
-      <h1 className="text-2xl font-bold text-purple-400">
-        TradeSim
-      </h1>
-
-      <div className="space-x-6">
-
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            `px-3 font-bold py-1 rounded-lg hover:text-purple-400 ${
-              isActive ? "bg-purple-600 shadow-lg" : ""
-            }`
-          }
-        >
-          Home
-        </NavLink>
-        <NavLink
-              to="/market"
-              className={({ isActive }) =>
-                `font-bold px-3 py-1 rounded-lg hover:text-purple-400 ${
-                  isActive ? "bg-purple-600 shadow-lg" : ""
-                }`
-              }
-            >
-              Market
-            </NavLink>
-
-        {token && (
-          <>
-
-            <NavLink
-              to="/dashboard"
-              className={({ isActive }) =>
-                `font-bold px-3 py-1 rounded-lg hover:text-purple-400 ${
-                  isActive ? "bg-purple-600 shadow-lg" : ""
-                }`
-              }
-            >
-              Dashboard
-            </NavLink>
-
-            <NavLink
-              to="/portfolio"
-              className={({ isActive }) =>
-                `font-bold px-3 py-1 rounded-lg hover:text-purple-400 ${
-                  isActive ? "bg-purple-600 shadow-lg" : ""
-                }`
-              }
-            >
-              Portfolio
-            </NavLink>
-
-            <button
-              onClick={handleLogout}
-              className="font-bold px-3 py-1 rounded-lg hover:text-red-400"
-            >
-              Logout
-            </button>
-          </>
-        )}
-
-        {!token && (
-          <>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
           <NavLink
-            to="/login"
+            to="/"
             className={({ isActive }) =>
-              `font-bold px-3 py-1 rounded-lg hover:text-purple-400 ${
+              `px-3 py-1 text-sm font-bold rounded-lg hover:text-purple-400 sm:text-base ${
                 isActive ? "bg-purple-600 shadow-lg" : ""
               }`
             }
           >
-            Login/Register
+            Home
           </NavLink>
-          </>
-        )}
+          <NavLink
+            to="/market"
+            className={({ isActive }) =>
+              `px-3 py-1 text-sm font-bold rounded-lg hover:text-purple-400 sm:text-base ${
+                isActive ? "bg-purple-600 shadow-lg" : ""
+              }`
+            }
+          >
+            Market
+          </NavLink>
 
+          {token && (
+            <>
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  `px-3 py-1 text-sm font-bold rounded-lg hover:text-purple-400 sm:text-base ${
+                    isActive ? "bg-purple-600 shadow-lg" : ""
+                  }`
+                }
+              >
+                Dashboard
+              </NavLink>
+
+              <NavLink
+                to="/portfolio"
+                className={({ isActive }) =>
+                  `px-3 py-1 text-sm font-bold rounded-lg hover:text-purple-400 sm:text-base ${
+                    isActive ? "bg-purple-600 shadow-lg" : ""
+                  }`
+                }
+              >
+                Portfolio
+              </NavLink>
+
+              <button
+                onClick={handleLogout}
+                className="px-3 py-1 text-sm font-bold rounded-lg hover:text-red-400 sm:text-base"
+              >
+                Logout
+              </button>
+            </>
+          )}
+
+          {!token && (
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `px-3 py-1 text-sm font-bold rounded-lg hover:text-purple-400 sm:text-base ${
+                  isActive ? "bg-purple-600 shadow-lg" : ""
+                }`
+              }
+            >
+              Login/Register
+            </NavLink>
+          )}
+        </div>
       </div>
     </nav>
   );

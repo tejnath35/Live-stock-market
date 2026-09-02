@@ -38,8 +38,8 @@ function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-linear-to-r from-gray-900 via-black to-gray-900">
-      <div className="bg-white rounded-2xl shadow-2xl p-10 w-96 h-auto">
+    <div className="flex items-center justify-center min-h-screen bg-linear-to-r from-gray-900 via-black to-gray-900 px-4">
+      <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md sm:p-10">
         <h2 className="text-2xl font-bold mb-6 text-center">
           {isForgotPassword ? "Reset Password" : "Login"}
         </h2>

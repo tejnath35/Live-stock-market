@@ -70,17 +70,17 @@ function Portfolio() {
     <div className="bg-gray-100 min-h-screen">
       <Navbar />
 
-      <div className="p-10">
-        <h1 className="text-3xl font-bold mb-6">Your Portfolio</h1>
+      <div className="p-4 sm:p-10">
+        <h1 className="text-2xl font-bold mb-4 sm:text-3xl sm:mb-6">Your Portfolio</h1>
         <p className="text-gray-700 mb-3 font-semibold">Wallet Balance: ₹{walletBalance.toFixed(2)}</p>
         <form onSubmit={handleTopUp} className="mb-4">
           <label className="block mb-2 font-medium">Top-up Virtual Wallet</label>
-          <div className="flex gap-2 items-center">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <input
               type="number"
               value={topUpAmount}
               onChange={(e) => setTopUpAmount(e.target.value)}
-              className="border rounded px-3 py-2"
+              className="w-full border rounded px-3 py-2 sm:max-w-xs"
               placeholder="Amount"
             />
             <button
@@ -102,7 +102,7 @@ function Portfolio() {
           <p className="text-gray-500">No holdings found.</p>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
           {portfolio.map((stock) => (
             <PortfolioCard key={stock.stockSymbol} stock={stock} />
           ))}

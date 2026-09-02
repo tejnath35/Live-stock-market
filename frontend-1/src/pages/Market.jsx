@@ -39,14 +39,14 @@ function Market() {
     <div className="bg-gray-100 min-h-screen">
       <Navbar />
 
-      <div className="p-10">
-        <h1 className="text-3xl font-bold mb-6">Live Market Data</h1>
+      <div className="p-4 sm:p-10">
+        <h1 className="text-2xl font-bold mb-4 sm:text-3xl sm:mb-6">Live Market Data</h1>
         {localStorage.getItem("token") && <p className="text-gray-700 font-semibold mb-4">Wallet Balance: ₹{walletBalance.toFixed(2)}</p>}
         {loading && <p>Loading market data...</p>}
         {error && <p className="text-red-600">{error}</p>}
 
         {!loading && !error && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6">
             {market.map((stock) => (
               <StockCard key={stock.stockSymbol} stock={stock} />
             ))}
