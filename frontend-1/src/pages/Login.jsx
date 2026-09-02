@@ -11,9 +11,13 @@ function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     try {
       const res = await axios.post(`${API_URL}/auth/login`, { email, password });
       alert("Login Successful!");
@@ -22,11 +26,16 @@ function Login() {
       navigate("/dashboard");
     } catch (error) {
       alert(error.response?.data?.message || "Login failed");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     try {
       const res = await axios.post(`${API_URL}/auth/forgot-password`, { email, newPassword: password });
       alert(res.data.message || "Password updated successfully!");
@@ -34,6 +43,8 @@ function Login() {
       setPassword("");
     } catch (error) {
       alert(error.response?.data?.message || "Failed to update password");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -83,9 +94,11 @@ function Login() {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 mb-2 transition"
+            disabled={isSubmitting}
+            aria-busy={isSubmitting}
+            className="w-full bg-blue-500 text-white py-2 rounded-lg mb-2 shadow-lg shadow-blue-500/20 transition-all duration-150 ease-in-out hover:-translate-y-0.5 hover:bg-blue-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none"
           >
-            {isForgotPassword ? "Update Password" : "Login"}
+            {isSubmitting ? (isForgotPassword ? "Updating..." : "Logging in...") : isForgotPassword ? "Update Password" : "Login"}
           </button>
         </form>
 
